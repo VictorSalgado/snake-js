@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Snake Game</title>
+    <!-- css -->
+    <link rel="stylesheet" type="text/css" href="./css/style.css">
+    <!-- fontawesome -->
+    <script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" data-auto-replace-svg="nest"></script>
+    <!-- P5.JS -->
+    <script src="./js/p5.js"></script>
+    <!-- JavaScript -->
+    <script src="./js/main.js"></script>
+    <!-- Leader board -->
+    <script src="./leaderboard/data.js"></script>
+    <!-- FileSaver -->
+    <script src="./js/fs.js"></script>
+</head>
+
+<body>
+
+    <div class="tab">
+        <button class="tablinks active" onclick="select(event, 'gameArea')">
+            Play Snake!
+        </button>
+        <button class="tablinks" onclick="select(event, 'leaderBoard')">
+            Leaders Board
+        </button>
+    </div>
+
+    <div id="leaderBoard" class="tabcontent">
+
+        <div id="#leaderTable">
+            <div class="header">
+                <span>#</span>
+                <span>Name</span>
+                <span>Score</span>
+            </div>
+            <div id="leaderTableContent" class="content">
+            </div>
+        </div>
+    </div>
+
+    <div id="gameArea" class="tabcontent">
+
+        <div id="gameHeader">
+            <div class="current-score">
+                <span>Score:</span>
+                <span id="currentScore"></span>
+            </div>
+
+            <div class="best-score">
+                <span>Best: </span>
+                <span id="bestScore"></span>
+            </div>
+        </div>
+
+        <div id="gameBox"></div>
+
+        <div id="saveScore">
+
+            <i id="closeButton" class="close far fa-window-close"></i>
+
+            <div class="score-label">
+                <span>Score:</span>
+                <span id="score"></span>
+            </div>
+            <div class="form__group field">
+                <input type="input" class="form__field" placeholder="Name" name="name" id='name' required />
+                <label for="name" class="form__label">Name</label>
+            </div>
+
+            <button id="saveScoreButton" class="save-score">Save Score</button>
+
+        </div>
+    </div>
+
+    <script>
+        function select(event, selected) {
+
+            tabcontent = document.getElementsByClassName("tabcontent");
+
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(selected).style.display = "block";
+            event.currentTarget.className += " active";
+
+            if (selected == 'leaderBoard') {
+                fillLeaderBoard();
+            }
+        }
+
+        async function fillLeaderBoard() {
+
+            var div = document.getElementById("leaderTableContent");
+            if (div == null) {
+                throw new Error();
+            }
+            while (div.firstChild) {
+                div.removeChild(div.lastChild);
+            }
+
+            // userList = [['1', 'Victor', 23], ['2', 'Guillermo', 21]];
+            userList = data;
+
+            if (userList.length == 0) {
+                noDataRow = document.createElement('div');
+                message = document.createElement('span');
+                message.innerHTML = 'No players on the leaders board';
+                message.style.margin = 'auto';
+
+                noDataRow.appendChild(message);
+
+                noDataRow.className = "leaderBoardRow";
+                div.appendChild(noDataRow);
+            } else {
+
+                for (i = 0; i < userList.length; i++) {
+
+                    newRow = document.createElement('div');
+
+                    number = document.createElement('span');
+                    number.innerHTML = i+1;
+                    newRow.appendChild(number);
+
+                    username = document.createElement('span');
+                    username.innerHTML = userList[i]['name'];
+                    newRow.appendChild(username);
+
+                    score = document.createElement('span');
+                    score.innerHTML = userList[i]['score'];
+                    newRow.appendChild(score);
+
+                    newRow.className = "leaderBoardRow";
+
+                    div.appendChild(newRow);
+                }
+            }
+        }
+    </script>
+
+</body>
+
+</html>
